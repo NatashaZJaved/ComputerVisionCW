@@ -1,5 +1,4 @@
-Directory = 'C:\Users\Natasha\Desktop\CurrentModules\ComputerVision\dataset\dataset\Training\png\';
-Files = dir(strcat(Directory,'*.png'));
+Files = dir(strcat(pwd,'\dataset\Training\png\*.png'));
 for k = 1:length(Files)
     % Read images
     Im = imread(strcat(Directory,Files(k).name));

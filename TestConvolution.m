@@ -1,5 +1,5 @@
-%bike = imread('C:\Users\Natasha\Desktop\CurrentModules\ComputerVision\dataset\dataset\Training\png\002-bike.png');
-test = imread('C:\Users\Natasha\Desktop\CurrentModules\ComputerVision\dataset\dataset\Test\test_1.png');
+%bike = imread(strcat(pwd,'\dataset\Training\png\002-bike.png'));
+%test = imread(strcat(pwd,'\dataset\Test\test_1.png'));
 peppers = imread('peppers.png');
 Im1 = test;
 %f = [-1 1]';
