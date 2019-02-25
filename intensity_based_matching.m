@@ -1,5 +1,7 @@
 function rectangles = intensity_based_matching(test_image)
 
+%TRY WITH test_image = strcat(pwd,'\dataset\Test\test_1.png');
+
 %[boxed, class_number]
 Directory = strcat(pwd,'\Templates\');
 Files = dir(strcat(pwd,'\Templates\*.png'));
@@ -17,6 +19,7 @@ corr=zeros(size(test_image));
 rectangles = zeros(size(test_image,1),size(test_image,2));
 
 for k = 1:length(Files)
+
     Template = imread(strcat(Directory,Files(k).name));
     %Template = imread(strcat(Directory,'011-trash_rot_90_smaller_by_4_times.png'));
     for i = 1:3 
@@ -41,7 +44,6 @@ for k = 1:length(Files)
         corr(row-2:row+2, col-2:col+2) = 1;
         
         % DRAW BOX
-        origin = [row col];
         len = size(Template, 1); width = size(Template,2);
 
         rectangles_orig = ones(len, width);
@@ -54,30 +56,38 @@ for k = 1:length(Files)
         %str = strsplit('011-trash_rot_90_smaller_by_4_times.png','_');
         rectangles_orig = imrotate(rectangles_orig,str2num(str{3}));
         
-        %ADD BOX TO THE IMAGE OF RECTANGLES
         
-        min_length = max(row-floor(size(rectangles_orig,1)/2),1);
-        max_length = min(row+floor(size(rectangles_orig,1)/2)-1, size(rectangles,1));
-        min_width = max(col-floor(size(rectangles_orig,2)/2), 1);
-        max_width = min(col+floor(size(rectangles_orig,2)/2)-1, size(rectangles,2));
         
+        %TRUNCATE IN CASE OF OVERFLOW
+        min_length = max(row-round(size(rectangles_orig,1)/2),1);
+        max_length = min(row-round(size(rectangles_orig,1)/2)+size(rectangles_orig,1)-1, size(rectangles,1));
+        min_width = max(col-round(size(rectangles_orig,2)/2), 1);
+        max_width = min(col-round(size(rectangles_orig,2)/2)+size(rectangles_orig,2)-1, size(rectangles,2));
+        
+        
+        %NOT SURE ON THIS BIT YET - NEEDS SOME WORK
         if max_length == size(rectangles,1)
-            rectangles_orig = rectangles_orig(1:size(rectangles,1)-row,:);
+            over_by = row+floor(size(rectangles_orig,1)/2)-1 - size(rectangles,1);
+            rectangles_orig = rectangles_orig(1:size(rectangles_orig)-over_by,:);
         end
         if min_length == 1
-            rectangles_orig = rectangles_orig(1:row - size(rectangles,1),:);
+            over_by = 1-row+floor(size(rectangles_orig,1)/2);
+            rectangles_orig = rectangles_orig(over_by:size(rectangles_orig,1),:);
         end   
         if max_width == size(rectangles,2)
-            rectangles_orig = rectangles_orig(:,1:size(rectangles,2) - col);
+            over_by = col+floor(size(rectangles_orig,2)/2)-1 - size(rectangles,2);
+            rectangles_orig = rectangles_orig(:,1:size(rectangles,2) - over_by);
         end        
         if min_width == 1
-            rectangles_orig = rectangles_orig(:,1:col - size(rectangles,2));
+            over_by = 1-col+floor(size(rectangles_orig,2)/2);
+            rectangles_orig = rectangles_orig(:,over_by:size(rectangles_orig,2));
         end                
         
-        
+        %ADD BOX TO THE IMAGE OF ALL RECTANGLES
         rectangles(min_length:max_length,...
             min_width:max_width) = rectangles(min_length:max_length,min_width:max_width) + rectangles_orig;
         
+        %So we only have 1s and 0s
         rectangles(rectangles>0) = 1;
 
         
