@@ -1,4 +1,4 @@
-Directory = '\\myfiles\ma800\dos\CM30080\CW\Training\png\';
+Directory = strcat(pwd,'\dataset\Training\png\');
 
 Files = dir(strcat(Directory,'*.png'));
 
@@ -19,7 +19,7 @@ for k = 1:length(Files)
     end
     
     %Set range to be r. 7 is much too many - probably about 4/5 will do.
-    range = 7;
+    range = 5;
     
     %Sample_size = how many pixels we are taking
     sample_size = 2;
@@ -41,7 +41,15 @@ for k = 1:length(Files)
            %Set current image to subsampled image
            curr_im = G_sub;
            
-           
+           %PRE-PROCESSING
+           %Set background to zero
+           curr_im(curr_im<1e-8) = 0;
+           % Normalise
+           for l=1:3
+               curr_im(:,:,l) = (curr_im(:,:,l) - mean2(curr_im(:,:,l)));
+               curr_im(:,:,l) = curr_im(:,:,l)/norm(curr_im(:,:,l));
+           end           
+
            imwrite(curr_im,strcat('Templates/',file_name{1},'_rot_',num2str((j-1)*360/rotations),'_smaller_by_',num2str(sample_size^i),'_times','.png'));
     
         end
