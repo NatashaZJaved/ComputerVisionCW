@@ -3,7 +3,7 @@ function [Ihat] = Convolution(I,f)
 [n,m] = size(I); [a,b] = size(f);
 
 f = rot90(f,2);
-%I = im2double(I);
+I = im2double(I);
 I_pad = padarray(I,[a-1; b-1]);
 Ihat = zeros(size(I_pad,1) - (a - 1), size(I_pad,2) - (b - 1));
 % Slide the flipped filter window over the image
