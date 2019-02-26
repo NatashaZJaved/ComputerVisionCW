@@ -4,7 +4,7 @@ function rectangles = intensity_based_matching(test_image)
 
 %[boxed, class_number]
 Directory = strcat(pwd,'\Templates\');
-Files = dir(strcat(pwd,'\Templates\*.png'));
+Files = dir(strcat(pwd,'\Templates\*.mat'));
 
 test_image = im2double(test_image);
 
@@ -20,12 +20,13 @@ rectangles = zeros(size(test_image,1),size(test_image,2));
 
 for k = 1:length(Files)
 
-    Template = imread(strcat(Directory,Files(k).name));
-    %Template = imread(strcat(Directory,'011-trash_rot_90_smaller_by_4_times.png'));
+    %Template = imread(strcat(Directory,Files(k).name));
+    %Template = imread(strcat(Directory,'022-car_rot_0_smaller_by_32_times.png'));
+    Template = importdata(strcat(Directory,'022-car_rot_0_smaller_by_16_times.mat'));
     for i = 1:3 
         %corr(:,:, = normxcorr2(Template(:,:,i),test_image(:,:,i));
         %corr(:,:,i) = filter2(Template(:,:,i), test_image(:,:,i))/norm(test_image(:,:,i));
-        corr(:,:,i) = filter2(Template(:,:,i), test_image(:,:,i))/norm(filter2(Template(:,:,i), test_image(:,:,i)));
+        corr(:,:,i) = filter2(Template(:,:,i), test_image(:,:,i))/norm(filter2(Template(:,:,i), test_image(:,:,i)),'fro');
     end
     
     

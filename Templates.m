@@ -31,15 +31,16 @@ for k = 1:length(Files)
     file_name = strsplit(Files(k).name,'.');
     for j = 1:rotations
         
-%         %PRE-PROCESSING
-%         %Set background to zero
-%         curr_im(curr_im<1e-8) = 0;
-%         % Normalise
-%         for l=1:3
-%             curr_im(:,:,l) = (curr_im(:,:,l) - mean2(curr_im(:,:,l)));
-%             curr_im(:,:,l) = curr_im(:,:,l)/norm(curr_im(:,:,l));
-%         end
-        imwrite(curr_im,strcat('Templates/',file_name{1},'_rot_',num2str((j-1)*360/rotations),'_smaller_by_',num2str(sample_size^0),'_times','.png'));
+        %PRE-PROCESSING
+        %Set background to zero
+        curr_im(curr_im<1e-8) = 0;
+        % Normalise
+        for l=1:3
+            curr_im(:,:,l) = (curr_im(:,:,l) - mean2(curr_im(:,:,l)));
+            curr_im(:,:,l) = curr_im(:,:,l)/norm(curr_im(:,:,l),'fro');
+        end
+        %imwrite(curr_im,strcat('Templates/',file_name{1},'_rot_',num2str((j-1)*360/rotations),'_smaller_by_',num2str(sample_size^0),'_times','.png'));
+        save(strcat('Templates/',file_name{1},'_rot_',num2str((j-1)*360/rotations),'_smaller_by_',num2str(sample_size^0),'_times','.mat'),'curr_im');
         for i = 1:range
             %Do convolution
             filtered = conv_colours(curr_im,G);
@@ -50,16 +51,17 @@ for k = 1:length(Files)
             %Set current image to subsampled image
             curr_im = G_sub;
             
-%             %PRE-PROCESSING
-%             %Set background to zero
-%             curr_im(curr_im<1e-8) = 0;
-%             % Normalise
-%             for l=1:3
-%                 curr_im(:,:,l) = (curr_im(:,:,l) - mean2(curr_im(:,:,l)));
-%                 curr_im(:,:,l) = curr_im(:,:,l)/norm(curr_im(:,:,l));
-%             end
+            %PRE-PROCESSING
+            %Set background to zero
+            curr_im(curr_im<1e-8) = 0;
+            % Normalise
+            for l=1:3
+                curr_im(:,:,l) = (curr_im(:,:,l) - mean2(curr_im(:,:,l)));
+                curr_im(:,:,l) = curr_im(:,:,l)/norm(curr_im(:,:,l),'fro');
+            end
             
-            imwrite(curr_im,strcat('Templates/',file_name{1},'_rot_',num2str((j-1)*360/rotations),'_smaller_by_',num2str(sample_size^i),'_times','.png'));
+            save(strcat('Templates/',file_name{1},'_rot_',num2str((j-1)*360/rotations),'_smaller_by_',num2str(sample_size^i),'_times','.mat'),'curr_im');
+            %imwrite(curr_im,strcat('Templates/',file_name{1},'_rot_',num2str((j-1)*360/rotations),'_smaller_by_',num2str(sample_size^i),'_times','.png'));
             
         end
         curr_im = imrotate(Im,(360/rotations)*j);
