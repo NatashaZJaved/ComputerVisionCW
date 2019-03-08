@@ -19,19 +19,20 @@ corr=zeros(size(test_image));
 rectangles = zeros(size(test_image,1),size(test_image,2));
 
 for k = 1:length(Files)
-
+    %Template = importdata(strcat(Directory,Files(k).name));
     %Template = imread(strcat(Directory,Files(k).name));
     %Template = imread(strcat(Directory,'022-car_rot_0_smaller_by_32_times.png'));
     Template = importdata(strcat(Directory,'022-car_rot_0_smaller_by_16_times.mat'));
     for i = 1:3 
         %corr(:,:, = normxcorr2(Template(:,:,i),test_image(:,:,i));
         %corr(:,:,i) = filter2(Template(:,:,i), test_image(:,:,i))/norm(test_image(:,:,i));
-        corr(:,:,i) = filter2(Template(:,:,i), test_image(:,:,i))/norm(filter2(Template(:,:,i), test_image(:,:,i)),'fro');
+        corr(:,:,i) = filter2(Template(:,:,i), test_image(:,:,i));
+        corr(:,:,i) = corr(:,:,i)./norm(corr(:,:,i),'fro');
     end
     
     
     
-    Threshold = 0.032;
+    Threshold = 0.04;
     summed_corr = sum(corr,3);
     Max = max(summed_corr(:));
     
@@ -40,7 +41,7 @@ for k = 1:length(Files)
     if Max > Threshold
         
     
-        [row col] = find(summed_corr==Max);
+        [row, col] = find(summed_corr==Max);
         
         corr(row-2:row+2, col-2:col+2) = 1;
         

@@ -9,17 +9,12 @@ for k = 1:length(Files)
     
     %Make filter
     n=2;
-    sigma=1;
+    sigma=0.2;
     %We have a (2n+1)*(2n+1) filter
-    G = zeros(2*n+1);
-    for x = -n:n
-        for y = -n:n
-            G(x+n+1,y+n+1) = (1/(2*pi*sigma^2))*exp(-0.5*(x^2+y^2)/sigma^2);
-        end
-    end
+    G = GaussianBlurMatrix(n,sigma);
     
     %Set range to be r. 7 is much too many - probably about 4/5 will do.
-    range = 5;
+    range = 4;
     
     %Sample_size = how many pixels we are taking
     sample_size = 2;
