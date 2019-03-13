@@ -1,4 +1,4 @@
-function [Lowes] = LowesPyramid(Im,sigma_0,s,k)
+function [Lowes,BlurredImages] = LowesPyramid(Im,sigma_0,s,k)
 % Computes Lowe pyramid of the Image Im 
 % for s different blur scales
 % k subsamples
