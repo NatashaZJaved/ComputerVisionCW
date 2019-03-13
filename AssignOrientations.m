@@ -1,59 +1,40 @@
-function [Keypoints_Oriented] = AssignOrientations(Keypoints, BlurredImages, sigma_0,s)
+function [Keypoints_Oriented,Magnitude,Orientation] ...
+    = AssignOrientations(Keypoints, BlurredImages, sigma_0,s)
 % Do that orientation stuff, the first one, not the second
 
 Keypoints_Oriented = cell(size(Keypoints));
+Magnitude = cell(size(Keypoints));
+Orientation = cell(size(Keypoints));
+
 for scale = 1:size(Keypoints,2)
     box_size = 16; %16x16 grid
     for blurs = 1:size(Keypoints,1)
+        
+        Pre_grad = padarray(BlurredImages{blurs,scale},[1 1],'symmetric');
+        Magnitude{blurs,scale} = sqrt((Pre_grad(3:end,2:end-1) - Pre_grad(1:end-2,2:end-1)).^2 + ...
+            (Pre_grad(2:end-1,3:end) - Pre_grad(2:end-1,1:end-2)).^2);
+        
+        Orientation{blurs,scale} = atan2(Pre_grad(2:end-1,3:end) - Pre_grad(2:end-1,1:end-2), ...
+            (Pre_grad(3:end,2:end-1) - Pre_grad(1:end-2,2:end-1)))*360/(2*pi);
+        Orientation{blurs,scale}(Orientation{blurs,scale}==0) = 1;
+        Orientation{blurs,scale}(isnan(Orientation{blurs,scale})) = 1; %When dividing by 0 - assume this just means the whole difference is 0
+        Orientation{blurs,scale}(Orientation{blurs,scale}<0) = Orientation{blurs,scale}(Orientation{blurs,scale}<0)+360;
+        
         for point = 1:size(Keypoints{blurs,scale},1)
             x = Keypoints{blurs,scale}(point,1);
             y = Keypoints{blurs,scale}(point,2);
             
             % Create orientation and magnitude stuff
-            x_vec = x - box_size/2:x + box_size/2;
-            y_vec = y - box_size/2:y + box_size/2;
-            m = zeros(length(x_vec),length(y_vec));
-            theta = m;
+            x_vec = max(x - box_size/2, 1):...
+                min(x + box_size/2, size(BlurredImages{blurs,scale},1));
+            y_vec = max(y - box_size/2, 1):...
+                min(y + box_size/2, size(BlurredImages{blurs,scale},2));
+            m = Magnitude{blurs,scale}(x_vec,y_vec);
+            theta = Orientation{blurs,scale}(x_vec,y_vec);
             
             % HIIISSTTTOOOGRRAMMM
             hist = zeros(36,1);
             
-            for i = 1:length(x_vec)
-                for j =  1:length(y_vec)
-                    x_cur = x_vec(i); y_cur = y_vec(j);
-                    
-                    x_minus = x_cur - 1;
-                    x_plus = x_cur + 1;
-                    if (x_cur==1)
-                        %mirror image
-                        x_minus = x_cur;
-                    elseif (x_cur==size(BlurredImages{blurs,scale},2))
-                        x_plus = x_cur;
-                        %mirror image
-                    end
-                    y_minus = y_cur - 1;
-                    y_plus = y_cur + 1;
-                    if (y_cur==1)
-                        y_minus = y_cur;
-                        %mirror image
-                    elseif (y_cur==size(BlurredImages{blurs,scale},1))
-                        y_plus = y_cur;
-                        %mirror image
-                    end
-                    
-                    m(i,j) = sqrt(...
-                        (BlurredImages{blurs,scale}(x_plus,y_cur) - ...
-                        BlurredImages{blurs,scale}(x_minus,y_cur))^2 + ...
-                        (BlurredImages{blurs,scale}(x_cur,y_plus) - ...
-                        BlurredImages{blurs,scale}(x_cur,y_minus))^2);
-                    % RESULT IN REDIANS CONVERT
-                    theta(i,j) = atan(...
-                        (BlurredImages{blurs,scale}(x_cur,y_plus) - ...
-                        BlurredImages{blurs,scale}(x_cur,y_minus))/...
-                        (BlurredImages{blurs,scale}(x_plus,y_cur) - ...
-                        BlurredImages{blurs,scale}(x_minus,y_cur)));
-                end
-            end
             which_bin = ceil(theta./10);
             sigma = sigma_0*2^(blurs/s);
             G = GaussianBlurMatrix(box_size/2,sigma*1.5);
@@ -73,6 +54,9 @@ for scale = 1:size(Keypoints,2)
                     [Keypoints_Oriented{blurs,scale}; x,y,hist(list(i))];
             end
         end
+        
+        
+        
     end
 end
 
