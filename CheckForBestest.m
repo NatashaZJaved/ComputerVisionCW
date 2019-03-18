@@ -22,6 +22,9 @@ for blurs = 1:size(Im_Descript,1)
                 end
             end
             if (best_pic > 0)
+                % Store the picture it came from
+                % The coordinates in that picture
+                % And the ssd at that point
                 best_Match{blurs,scale}(image_point,:) =...
                     [best_pic,Match{best_pic}{blurs,scale}(image_point,1),...
                     Match{best_pic}{blurs,scale}(image_point,2),min_ssd];

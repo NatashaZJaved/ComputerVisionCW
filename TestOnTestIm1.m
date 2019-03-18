@@ -6,7 +6,7 @@ Directory = strcat(pwd,'\dataset\Training\png\');
 Files = dir(strcat(Directory,'*.png'));
 
 Match = cell(length(Files),1);
-count = zeros(size(Files));
+count =  cell(length(Files),1);
 
 disp(length(Files))
 for k = 1:length(Files)
@@ -15,7 +15,7 @@ for k = 1:length(Files)
     
     training_im_descript = GetDescriptorFromImage(Im);
     
-    [Match{k}, count(k)] = Matching(Im_Descript, training_im_descript);
+    [Match{k}, count{k}] = Matching(Im_Descript, training_im_descript);
     
     disp(k)
 end
