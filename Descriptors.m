@@ -9,12 +9,12 @@ Descriptors = cell(size(Keypoints_Oriented));
 
 for scale = 1:size(Keypoints_Oriented,2)
     box_size = 16; %16x16 grid
-    for blurs = 1:size(Keypoints,1)
+    for blurs = 1:size(Keypoints_Oriented,1)
         
         
         for point = 1:size(Keypoints_Oriented{blurs,scale},1)
-            x = Keypoints{blurs,scale}(point,1);
-            y = Keypoints{blurs,scale}(point,2);
+            x = Keypoints_Oriented{blurs,scale}(point,1);
+            y = Keypoints_Oriented{blurs,scale}(point,2);
             
             % Create orientation and magnitude stuff. Point is at the
             % bottom right
