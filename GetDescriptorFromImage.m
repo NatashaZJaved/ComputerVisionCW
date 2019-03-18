@@ -1,7 +1,9 @@
-test_image = imread(strcat(pwd,'\dataset\Test\test_1.png'));
+function Descript = GetDescriptorFromImage(Image)
+
 s = 3; n_subscales = 4; sigma_0 = 0.2;
+
 % Get the Lowes
-[Lowes,BlurredImages] = LowesPyramid(test_image,sigma_0,s,n_subscales);
+[Lowes,BlurredImages] = LowesPyramid(Image,sigma_0,s,n_subscales);
 
 % Get them points
 ThemPoints = Keypoints(Lowes);
@@ -17,4 +19,4 @@ ReducedReducedKeypoints = FilterWithHessian(ReducedKeypoints,Lowes,sigma_0,s);
     = AssignOrientations(ReducedReducedKeypoints, BlurredImages, sigma_0,s);
 
 % Get Descriptors
-Descriptors = Descriptors(Keypoints_Oriented,Magnitude,Orientations);
+Descript = Descriptors(Keypoints_Oriented,Magnitude,Orientations);

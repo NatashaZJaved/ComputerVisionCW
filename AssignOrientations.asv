@@ -47,12 +47,11 @@ for scale = 1:size(Keypoints,2)
             end
             
             good_bin = max(hist);
-            list = find(hist>0.8*good_bin);
+            [list,index = find(hist>0.8*good_bin);
             
-            % Using middle of bin for orientation value
             for i=1:length(list)
                 Keypoints_Oriented{blurs,scale} = ...
-                    [Keypoints_Oriented{blurs,scale}; x,y,list(i)*10 - 5];
+                    [Keypoints_Oriented{blurs,scale}; x,y,hist(list(i))];
             end
         end
         

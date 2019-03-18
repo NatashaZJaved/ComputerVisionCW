@@ -48,13 +48,8 @@ for scale = 1:size(Keypoints_Oriented,2)
                         end
                     end
                     % Normalised to norm to 1
-                    if (norm(hist)~=0)
-                        Descriptors{blurs,scale}(point,(cur_box -1)*8 + 1: (cur_box -1)*8 + 8 ...
-                            ) = hist./norm(hist);
-                    else
-                        Descriptors{blurs,scale}(point,(cur_box -1)*8 + 1: (cur_box -1)*8 + 8 ...
-                            ) = hist;
-                    end
+                    Descriptors{blurs,scale}((cur_box -1)*8 + 1: (cur_box -1)*8 + 8 ...
+                        ,point) = hist/norm(hist);
                     cur_box = cur_box + 1;
                 end
             end
