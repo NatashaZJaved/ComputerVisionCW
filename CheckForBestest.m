@@ -9,13 +9,13 @@ best_Match = cell(size(Im_Descript));
 % Loop over blur and scale
 for blurs = 1:size(Im_Descript,1)
     for scale = 1:size(Im_Descript,2)
-        best_Match{blurs,scale} = NaN(size(Im_Descript{blurs,scale},1),3);
+        best_Match{blurs,scale} = NaN(size(Im_Descript{blurs,scale},1),4);
         % Look over each keypoint of the test_image
         for image_point = 1:size(Im_Descript{blurs,scale},1)
             % Check which is best for each pic
             best_pic = 0; min_ssd = inf;
             for pic = 1:size(Match,1)
-                Match{pic}{blurs,scale}(Match{pic}{blurs,scale} == 0) = inf;
+                %Match{pic}{blurs,scale}(Match{pic}{blurs,scale} == 0) = inf;
                 if Match{pic}{blurs,scale}(image_point,3) < min_ssd
                     % This better, saves it
                     best_pic = pic; min_ssd = Match{pic}{blurs,scale}(image_point,3);

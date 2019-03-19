@@ -8,7 +8,7 @@ Files = dir(strcat(Directory,'*.png'));
 
 Match = cell(length(Files),1);
 count =  cell(length(Files),1);
-L 
+
 disp(length(Files))
 for k = 1:length(Files)
     % Read images
@@ -16,7 +16,9 @@ for k = 1:length(Files)
     
     [training_im_descript,train_points] = GetDescriptorFromImage(Im);
     
+    tic;
     [Match{k}, count{k}] = Matching(Im_Descript, training_im_descript,train_points);
+    toc
     
     disp(k)
 end
