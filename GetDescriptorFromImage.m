@@ -1,4 +1,4 @@
-function Descript = GetDescriptorFromImage(Image)
+function [Descript,Keypoints_Oriented] = GetDescriptorFromImage(Image)
 
 s = 3; n_subscales = 4; sigma_0 = 0.2;
 
@@ -20,3 +20,4 @@ ReducedReducedKeypoints = FilterWithHessian(ReducedKeypoints,Lowes,sigma_0,s);
 
 % Get Descriptors
 Descript = Descriptors(Keypoints_Oriented,Magnitude,Orientations);
+end

@@ -1,3 +1,4 @@
+warning ('off','all');
 test_image = imread(strcat(pwd,'\dataset\Test\test_1.png'));
 Im_Descript = GetDescriptorFromImage(test_image);
 
@@ -7,15 +8,15 @@ Files = dir(strcat(Directory,'*.png'));
 
 Match = cell(length(Files),1);
 count =  cell(length(Files),1);
-
+L 
 disp(length(Files))
 for k = 1:length(Files)
     % Read images
     Im = imread(strcat(Directory,Files(k).name));
     
-    training_im_descript = GetDescriptorFromImage(Im);
+    [training_im_descript,train_points] = GetDescriptorFromImage(Im);
     
-    [Match{k}, count{k}] = Matching(Im_Descript, training_im_descript);
+    [Match{k}, count{k}] = Matching(Im_Descript, training_im_descript,train_points);
     
     disp(k)
 end
