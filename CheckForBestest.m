@@ -9,7 +9,7 @@ best_Match = cell(size(Im_Descript));
 % Loop over blur and scale
 for blurs = 1:size(Im_Descript,1)
     for scale = 1:size(Im_Descript,2)
-        best_Match{blurs,scale} = NaN(size(Im_Descript{blurs,scale},1),4);
+        best_Match{blurs,scale} = sparse(size(Im_Descript{blurs,scale},1),4);
         % Look over each keypoint of the test_image
         for image_point = 1:size(Im_Descript{blurs,scale},1)
             % Check which is best for each pic
