@@ -17,7 +17,7 @@ for k = 1:length(Files)
     [training_im_descript,train_points] = GetDescriptorFromImage(Im);
     
     tic;
-    [Match{k}, count{k}] = Matching_PCA(Im_Descript, training_im_descript,train_points);
+    [Match{k}, count{k}] = Matching_(Im_Descript, training_im_descript,train_points);
     toc
     
     disp(k)
