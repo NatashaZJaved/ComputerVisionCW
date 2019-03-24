@@ -1,6 +1,6 @@
 function [Descript,Keypoints_Oriented] = GetDescriptorFromImage(Image)
-
-s = 3; n_subscales = 4; sigma_0 = 0.2;
+global sigma_0;
+s = 3; n_subscales = 4; 
 
 % Get the Lowes
 [Lowes,BlurredImages] = LowesPyramid(Image,sigma_0,s,n_subscales);

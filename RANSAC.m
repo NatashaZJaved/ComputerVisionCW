@@ -5,7 +5,7 @@ Files = dir(strcat(Directory,'*.png'));
 imshow(test_image,[]);
 hold on
 % eps for ransac
-eps = 50;
+eps = 20;
 scale = 1;
 for train_pic = 1:length(Files)
     curr_train = imread(strcat(Directory,Files(train_pic).name));
@@ -126,7 +126,7 @@ for train_pic = 1:length(Files)
             where_bigger = find(best_inliers(j)<=cumsum(blur_vec));
             blur = where_bigger(1);
             A(2*j-1,:) = [point(1),-point(2),1,0];
-            A(2*j,:) = [point(2),-point(1),0,1];
+            A(2*j,:) = [point(2),point(1),0,1];
             
             Keypoint_Location = key_loc(best_inliers(j));
             x = Keypoints{blur,scale}(Keypoint_Location,1);
@@ -143,8 +143,14 @@ for train_pic = 1:length(Files)
         end
 %         
         % Corners of rectangle
-        c1 = [1;1]; c2 = [size(curr_train,1);1];
-        c3 = [1;size(curr_train,2)]; c4 = [size(curr_train,1);size(curr_train,2)];
+        shift_len = ceil(size(curr_train,1)/2);
+        shift_width = ceil(size(curr_train,2)/2);
+        %c1 = [1;1]; c2 = [size(curr_train,1);1];
+        %c3 = [1;size(curr_train,2)]; c4 = [size(curr_train,1);size(curr_train,2)];
+        
+        c1 = [-shift_len;-shift_width];c2 = [shift_len;-shift_width];
+        c3 = [-shift_len;shift_width];c4 = [shift_len;shift_width];
+        
         
 %         T_mat = [best_transform(1), -best_transform(2); ...
 %             best_transform(2), best_transform(1)];
@@ -155,7 +161,7 @@ for train_pic = 1:length(Files)
         
         T_mat = [Transform(1), -Transform(2); ...
             Transform(2), Transform(1)];
-        T_lation = [Transform(3);Transform(4)];
+        T_lation = [Transform(3)+shift_len;Transform(4)+shift_width];
         
         c1 = T_mat*c1 + T_lation;
         c2 = T_mat*c2 + T_lation;

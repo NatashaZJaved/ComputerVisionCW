@@ -1,4 +1,5 @@
 function G = GaussianBlurMatrix(N,sigma)
+    N=ceil(2.5*sigma);
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
     %We have a (2n+1)*(2n+1) filter

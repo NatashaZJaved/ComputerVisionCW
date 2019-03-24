@@ -5,8 +5,8 @@ Im_w_points = test_image;
 % We find training image with most matches
 
 % Bin image 011-trash
-trash = imread(strcat(pwd,'\dataset\Training\png\044-ferris-wheel.png'));
-num = 44;
+%trash = imread(strcat(pwd,'\dataset\Training\png\044-ferris-wheel.png'));
+num = 9;
 
 
 
@@ -31,7 +31,7 @@ b = zeros(2*size(selec,1), 1);
 blur = 1;
 for point = 1:size(selec,1)
     A(2*point-1,:) = [selec(point,2),-selec(point,3),1,0];
-    A(2*point,:) = [selec(point,3),-selec(point,2),0,1];
+    A(2*point,:) = [selec(point,3),selec(point,2),0,1];
     
     x = Keypoints{blur,scale}(point,1);
     y = Keypoints{blur,scale}(point,2);

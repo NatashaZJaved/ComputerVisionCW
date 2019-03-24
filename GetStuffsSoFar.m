@@ -1,10 +1,11 @@
-test_image = imread(strcat(pwd,'\dataset\Test\test_1.png'));
-s = 3; n_subscales = 4; sigma_0 = 0.2;
+test_image = imread(strcat(pwd,'\dataset\Test\test_15.png'));
+global sigma_0;
+s = 3; n_subscales = 4; 
 % Get the Lowes
 [Lowes,BlurredImages] = LowesPyramid(test_image,sigma_0,s,n_subscales);
 
 % Get them points
-ThemPoints = Keypoints(Lowes);
+ThemPoints = Get_Keypoints(Lowes);
 
 % Filter w/ Taylor
 ReducedKeypoints = FilterWithTaylor(ThemPoints,Lowes,sigma_0,s);
