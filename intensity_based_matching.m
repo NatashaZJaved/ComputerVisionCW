@@ -1,4 +1,4 @@
-function Matches = intensity_based_matching(test_image)
+function [Matches,Corners,Area,Corr,Line_Mat] = intensity_based_matching(test_image)
 
 %TRY WITH test_image = strcat(pwd,'\dataset\Test\test_1.png');
 
@@ -12,26 +12,30 @@ test_image = im2double(test_image);
 test_image(test_image<1e-8) = 0;
 
 % Set Threshold
-Threshold = 0.040;
+Min_Threshold = 0.0275;
 
 Line_Mat = zeros(length(Files),10);
+Corners = zeros(length(Files),4);
+Area = zeros(length(Files));
+Corr = zeros(length(Files));
 Matches = strings(length(Files),2);
 count_lines = 0;
 for k = 1:length(Files)
     Template = importdata(strcat(Directory,Files(k).name));
     
-    str = strsplit(Files(k).name,'-');
-    if (str2double(str{1}) <11)
-        continue;
-    end
+    str = strsplit(Files(k).name,'_');
+    scale = str2double(str{6});
+    Threshold = Min_Threshold + (scale*0.0025);
     %Template = importdata(strcat(Directory,'011-trash_rot_90_smaller_by_2_times.mat'));
     
     %Template = importdata(strcat(Directory,'011-trash_rot_90_smaller_by_2_times.mat'));
     %Template = importdata(strcat(Directory,'024-fountain_rot_315_smaller_by_4_times.mat'));
     %Template = importdata(strcat(Directory,'044-ferris-wheel_rot_270_smaller_by_3_times.mat'));
+    
     %corr=zeros(size(test_image,1) + size(Template,1) - 1, ...
     %    size(test_image,2) + size(Template,2) - 1,3);
     corr = zeros(size(test_image));
+    
     for i = 1:3
         %corr(:,:, = normxcorr2(Template(:,:,i),test_image(:,:,i));
         %corr(:,:,i) = filter2(Template(:,:,i), test_image(:,:,i))/norm(test_image(:,:,i));
@@ -57,7 +61,7 @@ for k = 1:length(Files)
         % DRAW BOX
         len = size(Template, 1); width = size(Template,2);
         
-        str = strsplit(Files(k).name,'_');
+        %str = strsplit(Files(k).name,'_');
         
         Theta = str2double(str{3});
         %Theta = 90;
@@ -66,6 +70,11 @@ for k = 1:length(Files)
         shift_len = ceil(len/2); shift_width = ceil(width/2);
         c1 = [-shift_len;-shift_width]; c2 = [shift_len;-shift_width];
         c3 = [-shift_len;shift_width]; c4 = [shift_len;shift_width];
+        
+        Corners(count_lines,:) = [c1(1) + xoffSet, c2(1) + xoffSet, ...
+            c1(2) + yoffSet, c3(2) + yoffSet];
+        Area(count_lines) = len*width;
+        Corr(count_lines) = Max;
         
         c1 = Rotate_Mat*c1 + [xoffSet; yoffSet];
         c2 = Rotate_Mat*c2 + [xoffSet; yoffSet];
@@ -80,8 +89,15 @@ for k = 1:length(Files)
     
 end
 
-Line_Mat = Line_Mat(1:count_lines,:);
-Matches = Matches(1:count_lines,:);
+Area = Area(1:count_lines);
+Corners = Corners(1:count_lines,:);
+Corr = Corr(1:count_lines);
+
+overlap_thresh = 0.1;
+Selected = ibm_non_max_sup(Corners, Corr, overlap_thresh, Area);
+
+Line_Mat = Line_Mat(Selected,:);
+Matches = Matches(Selected,:);
 
 new_im = insertShape(test_image,'Line',Line_Mat);
 imshow(new_im);
