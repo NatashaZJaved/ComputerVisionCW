@@ -2,32 +2,45 @@ Directory = strcat(pwd,'\dataset\Training\png\');
 
 Files = dir(strcat(Directory,'*.png'));
 
+% which_dir = 'Templates/';
+% dinfo = dir(which_dir);
+% dinfo([dinfo.isdir]) = [];   %skip directories
+% filenames = fullfile(which_dir, {dinfo.name});
+% delete( filenames{:} )
+
+
+%Set range to be r. 7 is much too many - probably about 4/5 will do.
+range = 8;    
+
+% Make Filter
+sigma=5;
+n=2.5*sigma;
+%We have a (2n+1)*(2n+1) filter
+
+G =cell(range,1);
+
+sigma_0 = 2;
+for i=1:range
+    sigma = sigma_0*2^(i/3);
+    G{i} = GaussianBlurMatrix(n,sigma);
+end
+
+%number of rotations
+rotations = 8;
+
 for k = 1:length(Files)
     % Read images
     Im = imread(strcat(Directory,Files(k).name));
     Im = im2double(Im);
     
-    %Make filter
-    
-    sigma=5;
-    n=2.5*sigma;
-    %We have a (2n+1)*(2n+1) filter
-    G = GaussianBlurMatrix(n,sigma);
-    surf(G)
-    
-    %Set range to be r. 7 is much too many - probably about 4/5 will do.
-    range = 8;    
-    
-    %number of rotations
-    rotations = 8;
-    
     curr_im = Im;
+    sub_im=curr_im;
     file_name = strsplit(Files(k).name,'.');
     for j = 1:rotations
         
-        for i = 1:range
+        for i = 9:range
             %Do convolution
-            filtered = conv_colours(curr_im,G);
+            filtered = conv_colours(curr_im,G{i});
             
             %Do subsampling
             sub_im = filtered(1:i+2:size(filtered,1), 1:i+2:size(filtered,2),:);
@@ -49,6 +62,7 @@ for k = 1:length(Files)
             
         end
         curr_im = imrotate(Im,(360/rotations)*j);
+        sub_im=curr_im;
     end
     
 end

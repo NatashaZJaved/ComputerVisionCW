@@ -5,15 +5,15 @@ Matched = cell(size(Test_Des));
 count = 0;
 for blurs = 1:size(Test_Des,1)
     for scale = 1:size(Test_Des,2)
-        Matched{blurs,scale} = NaN(size(Test_Des{blurs,scale},1),3);
+        Matched{blurs,scale} = sparse(size(Test_Des{blurs,scale},1),3);
         if isempty(Test_Des{blurs,scale}) || isempty(Object_Des{blurs,scale})
             continue
         end
-        num_pca_comp = 20;
+        num_pca_comp = 5;
         if (size(Test_Des{blurs,scale},1) > num_pca_comp) && (size(Object_Des{blurs,scale},1) > num_pca_comp)
-            [~,pca_full] = pca(Test_Des{blurs,scale}, 'Economy', false);
+            [~,pca_full] = pca(Test_Des{blurs,scale});
             Test_Des{blurs,scale} = pca_full(:,1:num_pca_comp);
-            [~,pca_full] = pca(Object_Des{blurs,scale}, 'Economy', false);
+            [~,pca_full] = pca(Object_Des{blurs,scale});
             Object_Des{blurs,scale} = pca_full(:,1:num_pca_comp );
         end
         for test_point = 1:size(Test_Des{blurs,scale},1)

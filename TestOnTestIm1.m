@@ -1,8 +1,5 @@
-global sigma_0;
-sigma_0=5;
-
 warning ('off','all');
-test_image = imread(strcat(pwd,'\dataset\Test\test_15.png'));
+test_image = imread(strcat(pwd,'\dataset\Test\test_1.png'));
 [Im_Descript, Keypoints] = GetDescriptorFromImage(test_image);
 
 % Get the training images

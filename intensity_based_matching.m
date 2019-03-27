@@ -12,13 +12,18 @@ test_image = im2double(test_image);
 test_image(test_image<1e-8) = 0;
 
 % Set Threshold
-Threshold = 0.045;
+Threshold = 0.040;
 
 Line_Mat = zeros(length(Files),10);
 Matches = strings(length(Files),2);
 count_lines = 0;
-for k = 1:15*9*8
+for k = 1:length(Files)
     Template = importdata(strcat(Directory,Files(k).name));
+    
+    str = strsplit(Files(k).name,'-');
+    if (str2double(str{1}) <11)
+        continue;
+    end
     %Template = importdata(strcat(Directory,'011-trash_rot_90_smaller_by_2_times.mat'));
     
     %Template = importdata(strcat(Directory,'011-trash_rot_90_smaller_by_2_times.mat'));
@@ -40,7 +45,7 @@ for k = 1:15*9*8
     
     if Max > Threshold
         count_lines = count_lines +1;
-        Matches(count_lines,:) = [Files(k).name, num2str(Max)];
+        Matches(count_lines,:) = [Files(k).name, string(Max)];
        [xpeak, ypeak] = find(summed_corr==Max);
 
        xoffSet = ypeak;
@@ -68,12 +73,7 @@ for k = 1:15*9*8
         c4 = Rotate_Mat*c4 + [xoffSet; yoffSet];
         
         
-        Line_Mat(count_lines,:) = [c1',c2',c4',c3',c1']; 
-        line([c1(1),c2(1)],[c1(2),c2(2)]);
-        line([c2(1),c4(1)],[c2(2),c4(2)]);
-        line([c4(1),c3(1)],[c4(2),c3(2)]);
-        line([c1(1),c3(1)],[c1(2),c3(2)]); 
-    
+        Line_Mat(count_lines,:) = [c1',c2',c4',c3',c1'];
     end
     
     disp(k);
