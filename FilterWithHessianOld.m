@@ -11,21 +11,21 @@ function ReducedKeypoints = FilterWithHessian(Keypoints,Lowes,sigma_0,s)
 N = 2;
 
 H = cell(size(Lowes));
-
+Gr = H;
 for scale = 1:size(Keypoints,2)
     for blurs = 1:size(Keypoints,1)
         
         sigma = sigma_0*2^(blurs/s);
         dGx = DerivGaussianBlurMatrix(N,sigma,0);
-        Grad_x = filt_colours(dGx,Lowes{blurs,scale});
+        Grad_x = filter2(dGx,Lowes{blurs,scale});
         dGy = DerivGaussianBlurMatrix(N,sigma,1);
-        Grad_y = filt_colours(dGy,Lowes{blurs,scale});
+        Grad_y = filter2(dGy,Lowes{blurs,scale});
         
         H{blurs,scale} = cell(3);
-        H{blurs,scale}{1,1} = filt_colours(dGx,Grad_x); %H_xx
-        H{blurs,scale}{1,2} = filt_colours(dGx,Grad_y); %H_xy
+        H{blurs,scale}{1,1} = filter2(dGx,Grad_x); %H_xx
+        H{blurs,scale}{1,2} = filter2(dGx,Grad_y); %H_xy
         H{blurs,scale}{2,1} = H{blurs,scale}{1,2}; %H_yx
-        H{blurs,scale}{2,2} = filt_colours(dGy,Grad_y); %H_yy
+        H{blurs,scale}{2,2} = filter2(dGy,Grad_y); %H_yy
     end
 end
 
@@ -36,31 +36,21 @@ for scale = 1:size(Keypoints,2)
             x = Keypoints{blurs,scale}(point,1);
             y = Keypoints{blurs,scale}(point,2);
             
-            keep = false;
-            for col = 1:3
-                H_xy = [H{blurs,scale}{1,1}(x,y,col), H{blurs,scale}{1,2}(x,y,col); ...
-                    H{blurs,scale}{2,1}(x,y,col), H{blurs,scale}{2,2}(x,y,col)];
-
-                alpha = det(H_xy);
-                if (alpha < 0)
-                     %Keypoints{blurs,scale}(point,:) = [];
-                     continue;
-                end
-
-                r = 10;
-
-                if (trace(H_xy)^2/det(H_xy) > (r+1)^2/r)
-                    %Keypoints{blurs,scale}(point,:) = [];
-                    continue
-                end
-                
-                keep = true;
+            H_xy = [H{blurs,scale}{1,1}(x,y), H{blurs,scale}{1,2}(x,y); ...
+                H{blurs,scale}{2,1}(x,y), H{blurs,scale}{2,2}(x,y)];
+            
+            alpha = det(H_xy);
+            if (alpha < 0)
+                 Keypoints{blurs,scale}(point,:) = [];
+                 continue;
             end
             
-            if (~keep)
+            r = 10;
+          
+            if (trace(H_xy)^2/det(H_xy) > (r+1)^2/r)
                 Keypoints{blurs,scale}(point,:) = [];
+                continue
             end
-            
             point = point + 1;
         end
     end

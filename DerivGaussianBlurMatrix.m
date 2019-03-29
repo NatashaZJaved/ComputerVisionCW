@@ -1,6 +1,7 @@
 function G = DerivGaussianBlurMatrix(N,sigma,Coord)
 % If Coord == 0 then deriv w.r.t x
 % If Coord == 1 then deriv w.r.t y
+N=ceil(2.5*sigma);
     G = zeros(2*N+1);
     for x = -N:N
         for y = -N:N
