@@ -6,52 +6,69 @@ Im_w_points = test_image;
 
 % Bin image 011-trash
 %trash = imread(strcat(pwd,'\dataset\Training\png\044-ferris-wheel.png'));
-num = 9;
+pic = 8;
 
+% Define A
 
-
-selec = [];
-blur_vec = [];
-for blurs = 1:size(best_Match,1)
-   %Select all of the matches relating to bin and store them together
-   f = find(best_Match{blurs,scale}(:,1) == num);
-   selec = [selec; best_Match{blurs,scale}(f,:)];
-   if length(f)>0
-      blur_vec(end + 1) = length(f);
-   else
-       blur_vec(end + 1) = 0;
-   end
-end
-
-% Now lets do affine transform on the sellc
-
-% Define A 
-A = zeros(2*size(selec,1), 4);
-b = zeros(2*size(selec,1), 1);
-blur = 1;
-for point = 1:size(selec,1)
-    A(2*point-1,:) = [selec(point,2),-selec(point,3),1,0];
-    A(2*point,:) = [selec(point,3),selec(point,2),0,1];
+scale = 4;
+for col = 1:3
+    A = zeros(2*size(best_Match{scale,col,pic},1), 4);
+    b = zeros(2*size(best_Match{scale,col,pic},1), 1);
     
-    x = Keypoints{blur,scale}(point,1);
-    y = Keypoints{blur,scale}(point,2);
-    b(2*point-1) = Keypoints{blur,scale}(point,1);
-    b(2*point) = Keypoints{blur,scale}(point,2);
+    where = find(best_Match{scale,col,pic}(:,1));
+    disp(length(where))
+    %     if length(where) <= 3
+    %         continue
+    %     end
     
-    Im_w_points(x-3:x+3,y-3:y+3) = Im_w_points(x-3:x+3,y-3:y+3) + 100;
-       
-    
-    
-    if point > sum(blur_vec(1:blur))
-        blur = blur + 1;
+    for i = 1:length(where)
+        point = where(i);
+        
+        A(2*point-1,:) = [best_Match{scale,col,pic}(point,3),...
+            -best_Match{scale,col,pic}(point,4),1,0];
+        A(2*point,:) = [best_Match{scale,col,pic}(point,3),...
+            best_Match{scale,col,pic}(point,4),0,1];
+        
+        x = best_Match{scale,col,pic}(point,1);
+        y = best_Match{scale,col,pic}(point,2);
+        
+        b(2*point-1) = x;
+        b(2*point) = y;
+        
+        x = Match{pic}{scale,col}(point,1);
+        y = Match{pic}{scale,col}(point,2);
+        scaled_x = x*(2^(scale-1));
+        scaled_y = y*(2^(scale-1));
+        
+        if (x>4 && x<size(Im_w_points,1) && ...
+                y>4 && y<size(Im_w_points,2))
+            Im_w_points(scaled_x-3:scaled_x+3,scaled_y-3:scaled_y+3,col)...
+                = Im_w_points(scaled_x-3:scaled_x+3,scaled_y-3:scaled_y+3,col) + 255;
+        end
+        
     end
+    Transform = A\b;
+    theta = asin(Transform(2)); a = Transform(1)/cos(theta);
+    tx = Transform(3); ty = Transform(4);
     
+    %imshow(Im_w_points);
 end
-
-Transform = A\b;
-theta = asin(Transform(2)); a = Transform(1)/cos(theta);
-tx = Transform(3); ty = Transform(4);
-
+imshow(Im_w_points);
+% 
+for col = 1:3
+    for point = 1: size(Match{pic}{scale,col},1)
+        x = Match{pic}{scale,col}(point,1);
+        y = Match{pic}{scale,col}(point,2);
+        scaled_x = x*(2^(scale-1));
+        scaled_y = y*(2^(scale-1));
+        
+        if (x>4 && x<size(Im_w_points,1) && ...
+                y>4 && y<size(Im_w_points,2))
+            Im_w_points(scaled_x-3:scaled_x+3,scaled_y-3:scaled_y+3,col)...
+                = Im_w_points(scaled_x-3:scaled_x+3,scaled_y-3:scaled_y+3,col) + 255;
+        end
+    end
+end
 imshow(Im_w_points);
 
 

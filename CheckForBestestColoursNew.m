@@ -5,17 +5,17 @@ function best_Match = CheckForBestestColoursNew(Match,Im_Descript)
 % Match{pic}{blurs,scale}(i,:) is ith match where i is index of match in
 % object pic and ssd
 
-
+n_images = 9;
 % We get rid of scales here
 best_Match = cell(size(Im_Descript,1),...
-    3, length(Match));
+    3, n_images);
 
 % Loop over blur and scale
 
 for scale = 1:size(Im_Descript,1)
     for col = 1:3
         
-        for picture = 1:length(Match)
+        for picture = 1:n_images
             best_Match{scale,col,picture} = sparse(size(Im_Descript{scale,col},1),5);
         end
         
@@ -23,7 +23,7 @@ for scale = 1:size(Im_Descript,1)
         for image_point = 1:size(Im_Descript{scale,col},1)
             % Check which is best for each pic
             best_pic = 0; min_ssd = inf;
-            for pic = 1:size(Match,1)
+            for pic = 1:n_images
                 %Match{pic}{blurs,scale}(Match{pic}{blurs,scale} == 0) = inf;
                 if (Match{pic}{scale,col}(image_point,5) < min_ssd) &&...
                         (Match{pic}{scale,col}(image_point,5)>0)
