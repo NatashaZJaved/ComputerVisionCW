@@ -1,28 +1,32 @@
 warning ('off','all');
-test_image = imread(strcat(pwd,'\dataset\Test\test_1.png'));
+test_image = imread(strcat(pwd,'\dataset\Test\test_15.png'));
 [Im_Descript, Keypoints] = GetDescriptorFromImageColour(test_image);
 
 % Get the training images
 Directory = strcat(pwd,'\dataset\Training\png\');
 Files = dir(strcat(Directory,'*.png'));
 
-Match = cell(length(Files)-40,1);
-Test_Des_No_Blurs = cell(length(Files)-40,1);
-Keypoints_Oriented_Test_Image_No_Blurs = cell(length(Files)-40,1);
-Object_Des_No_Blurs = cell(length(Files)-40,1);
-Keypoints_Oriented_Object_No_Blurs = cell(length(Files)-40,1);
+n_images = 9;
+Match = cell(length(Files)-n_images,1);
+Test_Des_No_Blurs = cell(length(Files)-n_images,1);
+Keypoints_Oriented_Test_Image_No_Blurs = cell(length(Files)-n_images,1);
+Object_Des_No_Blurs = cell(length(Files)-n_images,1);
+Keypoints_Oriented_Object_No_Blurs = cell(length(Files)-n_images,1);
 
-disp(length(Files))
-for k = 1:length(Files)-40
+
+for k = 1:n_images
     % Read images
-    Im = imread(strcat(Directory,Files(k).name));
+    %Im = imread(strcat(Directory,Files(k).name));
     
-    [training_im_descript,train_points] = GetDescriptorFromImageColour(Im);
+    %[training_im_descript,train_points] = GetDescriptorFromImageColour(Im);
     
     tic;
     [Match{k}, Test_Des_No_Blurs, Keypoints_Oriented_Test_Image_No_Blurs,...
         Object_Des_No_Blurs{k}, Keypoints_Oriented_Object_No_Blurs{k}]...
-        = Matching_PCAColoursNew(Im_Descript, training_im_descript,train_points, Keypoints);
+        = Matching_PCAColoursNew(Im_Descript, ...
+        Training_Im_Descripts{k}...
+        ,Training_Points{k},...
+        Keypoints);
     toc
     
     disp(k)

@@ -51,7 +51,7 @@ for scale = 1:size(Test_Des,2)
         if isempty(Test_Des_No_Blurs{scale,col}) || isempty(Object_Des_No_Blurs{scale,col})
             continue
         end
-        num_pca_comp = 5;
+        num_pca_comp = 20;
         if (size(Test_Des_No_Blurs{scale,col},1) > num_pca_comp) ...
                 && (size(Object_Des_No_Blurs{scale,col},1) > num_pca_comp)
             [~,pca_full] = pca(Test_Des_No_Blurs{scale,col});

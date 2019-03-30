@@ -5,14 +5,14 @@ Files = dir(strcat(Directory,'*.png'));
 imshow(test_image,[]);
 hold on
 % eps for ransac
-eps = 20;
-scale = 1;
-for train_pic = 1:10%length(Files)
+eps = 50;
+scale = 2;
+for train_pic = 1:9%length(Files)
     curr_train = imread(strcat(Directory,Files(train_pic).name));
     
     for col = 1:3
         best_inliers = []; best_transform = zeros(4,1);
-        best_Match{scale,col,train_pic} = unique(best_Match{scale,col,train_pic}, 'rows');
+        %best_Match{scale,col,train_pic} = unique(best_Match{scale,col,train_pic}, 'rows');
         %If we have less than 4 points (so can't do RANSAC), don't include
         %match
         where = find(best_Match{scale,col,train_pic}(:,1));
@@ -20,7 +20,7 @@ for train_pic = 1:10%length(Files)
             continue
         end
         
-        for num_ran = 1:14
+        for num_ran = 1:15
             %RANSAC
             int_sample = datasample(where,4,'Replace',false);
             
@@ -106,10 +106,10 @@ for train_pic = 1:10%length(Files)
                 Transform(2), Transform(1)];
             T_lation = [Transform(3)+shift_len;Transform(4)+shift_width];
             
-            c1 = T_mat*c1 + T_lation;
-            c2 = T_mat*c2 + T_lation;
-            c3 = T_mat*c3 + T_lation;
-            c4 = T_mat*c4 + T_lation;
+            c1 = scale*(T_mat*c1 + T_lation);
+            c2 = scale*(T_mat*c2 + T_lation);
+            c3 = scale*(T_mat*c3 + T_lation);
+            c4 = scale*(T_mat*c4 + T_lation);
             
             line([c1(1),c2(1)],[c1(2),c2(2)]);
             line([c2(1),c4(1)],[c2(2),c4(2)]);

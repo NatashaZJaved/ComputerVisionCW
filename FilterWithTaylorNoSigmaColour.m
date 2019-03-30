@@ -69,6 +69,10 @@ for scale = 1:size(Keypoints,2)
         
         Gr_xy = [Gr{blurs,scale}{1}(x,y,col); Gr{blurs,scale}{2}(x,y,col)];
         
+        if rank(H_xy)<2
+            List(1,:) = [];
+            continue;
+        end
         
         xhat = -H_xy\Gr_xy;
         

@@ -1,4 +1,4 @@
-function [Matches,Corners,Area,Corr,Line_Mat] = intensity_based_matching(test_image)
+function [Matches,Line_Mat,Corners,Area,Corr] = intensity_based_matching(test_image,Thresholds)
 
 %TRY WITH test_image = strcat(pwd,'\dataset\Test\test_1.png');
 
@@ -12,7 +12,7 @@ test_image = im2double(test_image);
 test_image(test_image<1e-8) = 0;
 
 % Set Threshold
-Min_Threshold = 0.0275;
+%Min_Threshold = Threshold(1);
 
 Line_Mat = zeros(length(Files),10);
 Corners = zeros(length(Files),4);
@@ -25,7 +25,7 @@ for k = 1:length(Files)
     
     str = strsplit(Files(k).name,'_');
     scale = str2double(str{6});
-    Threshold = Min_Threshold + (scale*0.0025);
+    Threshold = Thresholds(scale);
     %Template = importdata(strcat(Directory,'011-trash_rot_90_smaller_by_2_times.mat'));
     
     %Template = importdata(strcat(Directory,'011-trash_rot_90_smaller_by_2_times.mat'));
@@ -99,7 +99,7 @@ Selected = ibm_non_max_sup(Corners, Corr, overlap_thresh, Area);
 Line_Mat = Line_Mat(Selected,:);
 Matches = Matches(Selected,:);
 
-new_im = insertShape(test_image,'Line',Line_Mat);
-imshow(new_im);
+%new_im = insertShape(test_image,'Line',Line_Mat);
+%imshow(new_im);
 
 end
