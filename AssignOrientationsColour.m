@@ -7,7 +7,7 @@ Magnitude = cell(size(Keypoints));
 Orientation = cell(size(Keypoints));
 
 for scale = 1:size(Keypoints,2)
-    box_size = 16; %16x16 grid
+    box_size = 16/(2^(scale-1)); %16x16 grid
     for blurs = 1:size(Keypoints,1)
         Pre_grad = padarray(BlurredImages{blurs,scale},[1 1],'symmetric');
         for col = 1:3
