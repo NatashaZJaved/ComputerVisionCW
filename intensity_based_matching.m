@@ -40,7 +40,7 @@ for k = 1:length(Files)
         %corr(:,:, = normxcorr2(Template(:,:,i),test_image(:,:,i));
         %corr(:,:,i) = filter2(Template(:,:,i), test_image(:,:,i))/norm(test_image(:,:,i));
         corr(:,:,i) = filter2(Template(:,:,i), test_image(:,:,i));
-        corr(:,:,i) = corr(:,:,i)./norm(corr(:,:,i),'fro');
+        %corr(:,:,i) = corr(:,:,i)./norm(corr(:,:,i),'fro');
         %corr(:,:,i) = normxcorr2(Template(:,:,i),test_image(:,:,i));
     end
     
@@ -96,10 +96,22 @@ Corr = Corr(1:count_lines);
 overlap_thresh = 0.1;
 Selected = ibm_non_max_sup(Corners, Corr, overlap_thresh, Area);
 
+Corners=Corners(Selected,:);
+positions = Corners(:,2:3);
+
 Line_Mat = Line_Mat(Selected,:);
 Matches = Matches(Selected,:);
 
-%new_im = insertShape(test_image,'Line',Line_Mat);
-%imshow(new_im);
+
+Match_split=strings(size(Matches,1),1);
+for boxx=1:size(Matches,1)
+   splitter = split(Matches(boxx,1),'_');
+   Match_split(boxx,1)=splitter(1);
+end
+str_match = cellstr(Match_split);
+
+new_im = insertShape(test_image,'Line',Line_Mat);
+new_im=insertText(new_im,positions,str_match,'FontSize',11);
+imshow(new_im);
 
 end
