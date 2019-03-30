@@ -6,8 +6,9 @@ imshow(test_image,[]);
 hold on
 % eps for ransac
 eps = 50;
-scale = 2;
-for train_pic = 1:9%length(Files)
+scale = 1;
+n_images = 1;
+for train_pic = 1:n_images%length(Files)
     curr_train = imread(strcat(Directory,Files(train_pic).name));
     
     for col = 1:3
@@ -15,7 +16,7 @@ for train_pic = 1:9%length(Files)
         %best_Match{scale,col,train_pic} = unique(best_Match{scale,col,train_pic}, 'rows');
         %If we have less than 4 points (so can't do RANSAC), don't include
         %match
-        where = find(best_Match{scale,col,train_pic}(:,1));
+        where = find(~isnan(best_Match{scale,col,train_pic}(:,1)));
         if length(where) <= 3
             continue
         end
@@ -35,8 +36,8 @@ for train_pic = 1:9%length(Files)
                 %Allocate A
                 A(2*j-1,:) = [best_Match{scale,col,train_pic}(point,3),...
                     -best_Match{scale,col,train_pic}(point,4),1,0];
-                A(2*j,:) = [best_Match{scale,col,train_pic}(point,3),...
-                    best_Match{scale,col,train_pic}(point,4),0,1];
+                A(2*j,:) = [best_Match{scale,col,train_pic}(point,4),...
+                    best_Match{scale,col,train_pic}(point,3),0,1];
                 
                 %Find test image keypoint coordinates
                 %Allocate b

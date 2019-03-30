@@ -10,7 +10,7 @@ n_ranges = 4;
 range_list = cell(2,1);
 range_list{1} = [3,4,6,8,10,12,16]';
 range_list{2} = [2,4,8,16]';
-range_list{3} = [2,3,4,5,6,7,8,9]';
+%range_list{3} = [2,3,4,5,6,7,8,9]';
 range_list{4} = [2,4,6,8,10,12,14,16]';
 
 sigma_0 = 1;

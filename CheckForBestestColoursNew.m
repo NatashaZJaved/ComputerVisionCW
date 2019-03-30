@@ -5,7 +5,7 @@ function best_Match = CheckForBestestColoursNew(Match,Im_Descript)
 % Match{pic}{blurs,scale}(i,:) is ith match where i is index of match in
 % object pic and ssd
 
-n_images = 9;
+n_images = 1;
 % We get rid of scales here
 best_Match = cell(size(Im_Descript,1),...
     3, n_images);
@@ -16,7 +16,7 @@ for scale = 1:size(Im_Descript,1)
     for col = 1:3
         
         for picture = 1:n_images
-            best_Match{scale,col,picture} = sparse(size(Im_Descript{scale,col},1),5);
+            best_Match{scale,col,picture} = NaN(size(Im_Descript{scale,col},1),5);
         end
         
         % Look over each keypoint of the test_image
@@ -26,9 +26,10 @@ for scale = 1:size(Im_Descript,1)
             for pic = 1:n_images
                 %Match{pic}{blurs,scale}(Match{pic}{blurs,scale} == 0) = inf;
                 if (Match{pic}{scale,col}(image_point,5) < min_ssd) &&...
-                        (Match{pic}{scale,col}(image_point,5)>0)
+                        (~isnan(Match{pic}{scale,col}(image_point,5)))
                     % This better, saves it
                     best_pic = pic; min_ssd = Match{pic}{scale,col}(image_point,5);
+                    
                 end
             end
             if (best_pic > 0)
