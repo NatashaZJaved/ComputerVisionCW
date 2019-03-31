@@ -188,8 +188,9 @@ for scale = 1:size(Keypoints,2)
             %Put in threshold
             if blurs == size(Keypoints,1)%For boundary
                 List(1,:) = [];
-                count_selected(blurs,col) = count_selected(blurs,col) + 1;
-                Selected{blurs,col}(count_selected(blurs,col)) = point;
+                %count_selected(blurs,col) = count_selected(blurs,col) + 1;
+                %Selected{blurs,col}(count_selected(blurs,col)) = point;
+                %Keypoints{blurs,scale,col}(point,:) = [];
                 %point=point+1;
                 continue
             else
@@ -206,8 +207,8 @@ for scale = 1:size(Keypoints,2)
 
             if blurs == 1 %For boundary
                 List(1,:) = [];
-                count_selected(blurs,col) = count_selected(blurs,col) + 1;
-                Selected{blurs,col}(count_selected(blurs,col)) = point;
+                %count_selected(blurs,col) = count_selected(blurs,col) + 1;
+                %Selected{blurs,col}(count_selected(blurs,col)) = point;
                 %point = point+1;
                 continue
             else
