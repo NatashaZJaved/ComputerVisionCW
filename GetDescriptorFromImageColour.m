@@ -9,7 +9,7 @@ sigma_0 = 0.5; s = 3; n_subscales = 4;
 ThemPoints = Get_Keypoints_Colour(Lowes);
 
 % Filter w/ Taylor
-ReducedKeypoints = FilterWithTaylorNoSigmaColour(ThemPoints,Lowes,sigma_0,s);
+ReducedKeypoints = FilterWithTaylorNoSigmaColourNewFilter(ThemPoints,Lowes,sigma_0,s);
 
 % Filter w/ Hessian
 ReducedReducedKeypoints = FilterWithHessianColour(ReducedKeypoints,Lowes,sigma_0,s);
