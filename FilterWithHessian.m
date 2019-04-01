@@ -32,36 +32,29 @@ end
 for scale = 1:size(Keypoints,2)
     for blurs = 1:size(Keypoints,1)
         point = 1;
-        while point <= size(Keypoints{blurs,scale},1)
-            x = Keypoints{blurs,scale}(point,1);
-            y = Keypoints{blurs,scale}(point,2);
-            
-            keep = false;
-            for col = 1:3
+        for col = 1:3
+            while point <= size(Keypoints{blurs,scale,col},1)
+                x = Keypoints{blurs,scale,col}(point,1);
+                y = Keypoints{blurs,scale,col}(point,2);
+                
                 H_xy = [H{blurs,scale}{1,1}(x,y,col), H{blurs,scale}{1,2}(x,y,col); ...
                     H{blurs,scale}{2,1}(x,y,col), H{blurs,scale}{2,2}(x,y,col)];
-
+                
                 alpha = det(H_xy);
                 if (alpha < 0)
-                     %Keypoints{blurs,scale}(point,:) = [];
-                     continue;
+                    Keypoints{blurs,scale,col}(point,:) = [];
+                    continue;
                 end
-
+                
                 r = 10;
-
+                
                 if (trace(H_xy)^2/det(H_xy) > (r+1)^2/r)
-                    %Keypoints{blurs,scale}(point,:) = [];
+                    Keypoints{blurs,scale,col}(point,:) = [];
                     continue
                 end
                 
-                keep = true;
+                point = point + 1;
             end
-            
-            if (~keep)
-                Keypoints{blurs,scale}(point,:) = [];
-            end
-            
-            point = point + 1;
         end
     end
 end

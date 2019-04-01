@@ -1,5 +1,6 @@
 function Drawing = DrawBoxes(Keypoints, image)
-%Need to use reducedreducedkeypoints for this 
+
+% Draw boxes around features
 Drawing = image;
 
 for blurs = 1:size(Keypoints,1)
@@ -40,7 +41,5 @@ for blurs = 1:size(Keypoints,1)
     
 end
 
-
-%imshow(Drawing);
 
 end
