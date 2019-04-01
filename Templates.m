@@ -18,7 +18,7 @@ end
 %We have a (2n+1)*(2n+1) filter
 
 %number of rotations
-rotations = 8;
+rotations = 12;
 
 for k = 1:length(Files)
     % Read images
@@ -47,9 +47,9 @@ for k = 1:length(Files)
                 sub_im(:,:,l) = sub_im(:,:,l)/norm(sub_im(:,:,l),'fro');
             end
             
-            save(strcat('Templates/',file_name{1},'_rot_',...
-                num2str((j-1)*360/rotations),'_smaller_by_',...
-                num2str(i),'_times','.mat'),'sub_im');
+            save(strcat('Templates/',file_name{1},'_smaller_by_',...
+                num2str(i),'_times','_rot_',...
+                num2str((j-1)*360/rotations),'.mat'),'sub_im');
             %imwrite(curr_im,strcat('Templates/',file_name{1},'_rot_',num2str((j-1)*360/rotations),'_smaller_by_',num2str(sample_size^i),'_times','.png'));
             
         end
