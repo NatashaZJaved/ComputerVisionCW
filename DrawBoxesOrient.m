@@ -2,6 +2,10 @@ function Drawing = DrawBoxesOrient(Keypoints, image)
 %Need to use reducedreducedkeypoints for this 
 Drawing = image;
 
+
+Line_Mat = cell(10000,1);
+count = 0;
+
 for blurs = 1:size(Keypoints,1)
     
     for scale = 1:size(Keypoints,2)
@@ -15,14 +19,14 @@ for blurs = 1:size(Keypoints,1)
                     y_scaled = (2^(scale-1))*Keypoints{blurs,scale,col}(point,2);
                     theta = Keypoints{blurs,scale,col}(point,3);
                     
-                    if (col == 1)
-                        color = 'red';
-                    elseif (col == 2)
-                        color = 'green';
-                    else
-                        color = 'blue';
-                    end
-                    
+%                     if (col == 1)
+%                         color = 'red';
+%                     elseif (col == 2)
+%                         color = 'green';
+%                     else
+%                         color = 'blue';
+%                     end
+%                     
                     shift_len = ceil(7*(2^(scale-1))/2);
                     c1 = [-shift_len;-shift_len];
                     c2 = [shift_len;-shift_len];
@@ -46,12 +50,19 @@ for blurs = 1:size(Keypoints,1)
                     box_arrow_1 = Rotate_Mat*box_arrow_1 + [y_scaled;x_scaled];
                     box_arrow_2 = Rotate_Mat*box_arrow_2 + [y_scaled;x_scaled];
                     
-                    Drawing = insertShape(Drawing,'Line',[c1', c2', c4', c3', c1']...
-                        ,'Color',color);
-                    Drawing = insertShape(Drawing,'Line',[middle', box_orient']...
-                        ,'Color',color);                    
-                    Drawing = insertShape(Drawing,'Line',[box_arrow_1', box_orient', box_arrow_2']...
-                        ,'Color',color);                       
+                    count = count + 1;
+                    Line_Mat{count} = [c1', c2', c4', c3', c1'];
+                    count = count + 1;
+                    Line_Mat{count} = [middle', box_orient'];
+                    count = count + 1;
+                    Line_Mat{count} = [box_arrow_1', box_orient', box_arrow_2'];
+                    
+%                     Drawing = insertShape(Drawing,'Line',[c1', c2', c4', c3', c1']...
+%                         ,'Color',color);
+%                     Drawing = insertShape(Drawing,'Line',[middle', box_orient']...
+%                         ,'Color',color);                    
+%                     Drawing = insertShape(Drawing,'Line',[box_arrow_1', box_orient', box_arrow_2']...
+%                         ,'Color',color);                       
                     
                 end
             end                
@@ -61,7 +72,6 @@ for blurs = 1:size(Keypoints,1)
     
 end
 
-
-imshow(Drawing);
+Drawing = insertShape(Drawing,'Line',Line_Mat(1:count));
 
 end
