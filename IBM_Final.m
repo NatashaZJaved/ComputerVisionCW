@@ -1,6 +1,6 @@
 range = [2,3,4,8,12,16]';
 
-% Code to run Templates
+% % Code to run Templates
 % sigma_0 = 2;
 % G = cell(length(range),1);
 % for ind=1:length(range)

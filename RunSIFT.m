@@ -8,7 +8,6 @@ test_image = imread(strcat(pwd,'\dataset\Test\test_15.png'));
 % Get keypoints and descriptors
 [Im_Descript, Keypoints] = GetDescriptorFromImage(test_image);
 
-
 n_images = 50;
 Match = cell(n_images,1);
 Test_Des_No_Blurs = cell(n_images,1);

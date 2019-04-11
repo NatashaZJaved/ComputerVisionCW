@@ -25,6 +25,11 @@ scales = [2,3,4,8,12,16]';
 for pic = 1:length(pictures)
     
     pass_pic = false;
+    
+    if (pic == 28) 
+        continue;
+    end
+    
     for rotate_ind = 1:length(rotations)
         rotate = rotations(rotate_ind);
         if (rotate == 30) && ~(pass_pic)

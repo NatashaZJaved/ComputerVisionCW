@@ -62,4 +62,5 @@ end
 
 
 new_im = insertShape(Big_Boi,'Line',Match_Lines);
+figure;
 imshow(new_im);
