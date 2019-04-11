@@ -24,7 +24,7 @@ ReducedReducedKeypoints = FilterWithHessian(ReducedKeypoints,Lowes,sigma_0,s);
 Drawing_Proper_Reduced = DrawKeypoints(ReducedReducedKeypoints, Image);
 
 % Draw Boxes
-Boxes = DrawBoxes(ReducedReducedKeypoints, image);
+Boxes = DrawBoxes(ReducedReducedKeypoints, Image);
 
 % Orient
 [Keypoints_Oriented,Magnitude,Orientations]...
